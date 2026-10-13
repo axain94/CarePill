@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarePill 智憶雲盒 ｜ 讓家人不再擔憂，讓自己不再遺忘</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Noto Sans TC & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              peach: '#FF7E67',    // 暖心蜜桃橘
+              amber: '#FFB830',    // 明亮向日葵金黃
+              coral: '#FA5858',    // 活力暖紅
+              cream: '#FFF9F5',    // 溫暖米白色底
+              card: '#FFFFFF',     // 純白卡片
+              mint: '#2EB8A6',     // 舒心健康薄荷綠
+              dark: '#2D3748',     // 深炭灰字體
+              muted: '#718096'
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans TC"', '"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          boxShadow: {
+            'warm-sm': '0 4px 20px -2px rgba(255, 126, 103, 0.12)',
+            'warm-lg': '0 20px 35px -5px rgba(255, 126, 103, 0.22)',
+            'warm-glow': '0 0 30px rgba(255, 184, 48, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ========== 作業規範：3 種不同的文字動畫 ========== */
+    
+    /* 動畫 1: 打字機流暢揭示動畫 (Typing Reveal) */
+    .typewriter-text {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid #FF7E67;
+      animation: typing 3.2s steps(28, end) infinite alternate, blink-caret 0.75s step-end infinite;
+    }
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: #FF7E67; }
+    }
+
+    /* 動畫 2: 流光閃耀漸層動畫 (Shimmer Text Effect) */
+    .shimmer-text {
+      background: linear-gradient(90deg, #FF7E67 0%, #FFB830 50%, #FF7E67 100%);
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: shimmerFlow 3.5s linear infinite;
+    }
+    @keyframes shimmerFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* 動畫 3: 呼吸浮現脈衝效果 (Pulse Glow Text) */
+    .pulse-glow-text {
+      animation: warmPulse 2.8s ease-in-out infinite;
+    }
+    @keyframes warmPulse {
+      0%, 100% {
+        transform: scale(1);
+        text-shadow: 0 0 10px rgba(255, 126, 103, 0.2);
+      }
+      50% {
+        transform: scale(1.03);
+        text-shadow: 0 0 25px rgba(255, 184, 48, 0.5);
+      }
+    }
+
+    /* 捲動進場淡入效果 */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-on-scroll.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========== 作業規範：按鈕互動變化 (Normal, Hover, Active) ========== */
+    .btn-warm-primary {
+      background: linear-gradient(135deg, #FF7E67 0%, #FF9F59 100%);
+      color: #ffffff;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 20px rgba(255, 126, 103, 0.28);
+    }
+    .btn-warm-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 16px 28px rgba(255, 126, 103, 0.42);
+      filter: brightness(1.05);
+    }
+    .btn-warm-primary:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 4px 10px rgba(255, 126, 103, 0.3);
+    }
+
+    .btn-warm-secondary {
+      background: #FFFFFF;
+      color: #FF7E67;
+      border: 2px solid #FFD5CB;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-warm-secondary:hover {
+      background: #FFF4F0;
+      border-color: #FF7E67;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(255, 126, 103, 0.15);
+    }
+    .btn-warm-secondary:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-brand-cream text-brand-dark font-sans selection:bg-brand-peach selection:text-white">
+
+  <!-- ================= 導覽列 (Navbar) ================= -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-orange-100 transition-all duration-300 shadow-sm" id="main-nav">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-peach to-brand-amber flex items-center justify-center text-white shadow-warm-sm group-hover:scale-105 transition-transform">
+          <i data-lucide="pill" class="w-6 h-6 transform -rotate-45"></i>
+        </div>
+        <div>
+          <span class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-brand-peach to-brand-amber bg-clip-text text-transparent">CarePill</span>
+          <span class="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 ml-2 bg-orange-100 text-brand-peach rounded-full">智憶雲盒</span>
+        </div>
+      </a>
+
+      <!-- 電腦版選單 -->
+      <nav class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600">
+        <a href="#story" class="hover:text-brand-peach transition-colors">品牌起源</a>
+        <a href="#philosophy" class="hover:text-brand-peach transition-colors">核心理念</a>
+        <a href="#products" class="hover:text-brand-peach transition-colors">產品展示</a>
+        <a href="#features" class="hover:text-brand-peach transition-colors">品牌特色</a>
+        <a href="#contact" class="hover:text-brand-peach transition-colors">聯絡諮詢</a>
+      </nav>
+
+      <!-- 右側 CTA 按鈕 -->
+      <div class="hidden md:flex items-center gap-3">
+        <a href="#contact" class="btn-warm-primary px-6 py-2.5 rounded-full text-sm font-semibold inline-flex items-center gap-2">
+          <span>體驗守護</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+      <!-- 手機版漢堡選單按鈕 -->
+      <button id="mobile-menu-btn" class="md:hidden p-2.5 rounded-xl bg-orange-50 text-brand-peach focus:outline-none hover:bg-orange-100" aria-label="切換選單">
+        <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- 手機版選單下拉抽屜 -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-orange-100 px-6 py-6 space-y-4 shadow-lg">
+      <a href="#story" class="mobile-nav-link block py-2 text-base font-medium text-gray-700 hover:text-brand-peach">品牌起源</a>
+      <a href="#philosophy" class="mobile-nav-link block py-2 text-base font-medium text-gray-700 hover:text-brand-peach">核心理念</a>
+      <a href="#products" class="mobile-nav-link block py-2 text-base font-medium text-gray-700 hover:text-brand-peach">產品展示 (3大核心)</a>
+      <a href="#features" class="mobile-nav-link block py-2 text-base font-medium text-gray-700 hover:text-brand-peach">品牌特色與體驗</a>
+      <a href="#contact" class="mobile-nav-link block py-2 text-base font-medium text-gray-700 hover:text-brand-peach">聯絡資訊 (CTA)</a>
+      <div class="pt-3 border-t border-gray-100">
+        <a href="#contact" class="mobile-nav-link btn-warm-primary w-full py-3 rounded-xl text-center font-bold text-sm block">立即預約體驗</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-20">
+    
+    <!-- ================= 首頁主視覺 (Hero Banner) ================= -->
+    <section class="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-b from-orange-50/70 via-brand-cream to-white">
+      <!-- 暖陽柔光裝飾背景圓 -->
+      <div class="absolute -top-32 -right-32 w-96 h-96 bg-brand-amber/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute top-1/2 -left-32 w-80 h-80 bg-brand-peach/15 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 relative z-10">
+        <div class="grid lg:grid-cols-12 gap-12 items-center">
+          
+          <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+            <!-- 標籤 -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100/80 border border-orange-200 text-brand-peach text-sm font-semibold tracking-wide">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-peach animate-ping"></span>
+              2026 智慧家庭用藥守護新標竿
+            </div>
+
+            <!-- 文字動畫 1: 打字機流暢揭示動畫 -->
+            <div class="py-1">
+              <h2 class="text-lg sm:text-2xl font-bold text-brand-peach tracking-wide">
+                <span class="typewriter-text font-mono">CarePill 智慧連動健康藥盒</span>
+              </h2>
+            </div>
+
+            <!-- 文字動畫 2: 流光閃耀漸層動畫 -->
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.2]">
+              讓家人不再擔憂，<br>
+              <span class="shimmer-text">讓自己不再遺忘。</span>
+            </h1>
+
+            <p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+              專為需要規律服藥與容易忘記的族群打造。透過物聯網藥盒與行動端 APP 零時差提示，每一次開蓋皆精準記錄，守護長輩安全、撫平子女焦慮。
+            </p>
+
+            <!-- 按鈕變化展示群 (Normal / Hover / Active) -->
+            <div class="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              <a href="#products" class="btn-warm-primary w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-3">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+                <span>探索 3 大核心產品</span>
+              </a>
+              <a href="#story" class="btn-warm-secondary w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-2">
+                <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+                <span>閱讀品牌創立故事</span>
+              </a>
+            </div>
+
+            <!-- 信賴數字指標 -->
+            <div class="pt-8 border-t border-orange-100 grid grid-cols-3 gap-4 text-center lg:text-left">
+              <div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-brand-peach">100%</div>
+                <div class="text-xs sm:text-sm text-gray-500 mt-1">避免重複誤服藥</div>
+              </div>
+              <div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-brand-amber">3重</div>
+                <div class="text-xs sm:text-sm text-gray-500 mt-1">聲光與APP提醒</div>
+              </div>
+              <div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-brand-mint">0距離</div>
+                <div class="text-xs sm:text-sm text-gray-500 mt-1">遠端家庭雲端通報</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 主視覺圖卡 -->
+          <div class="lg:col-span-5 relative flex justify-center">
+            <div class="relative w-full max-w-md">
+              <div class="absolute inset-0 bg-gradient-to-tr from-brand-peach/30 to-brand-amber/30 rounded-3xl filter blur-2xl transform rotate-3"></div>
+              
+              <div class="relative bg-white rounded-3xl p-6 sm:p-8 shadow-warm-lg border border-orange-100">
+                <div class="flex items-center justify-between pb-6 border-b border-gray-100">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-brand-peach">
+                      <i data-lucide="bell-ring" class="w-6 h-6 animate-bounce"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-gray-800">中午 12:30 用藥提醒</h4>
+                      <p class="text-xs text-gray-500">已為「爸爸」開啟第 2 格藥盒指示燈</p>
+                    </div>
+                  </div>
+                  <span class="text-xs font-semibold px-2.5 py-1 bg-green-100 text-green-700 rounded-full">連線正常</span>
+                </div>
+
+                <!-- 模擬卡片內容 -->
+                <div class="py-6 space-y-4">
+                  <div class="p-4 rounded-2xl bg-orange-50/80 border border-orange-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-peach"></i>
+                      <span class="text-sm font-medium text-gray-700">降血壓藥物（脈優 5mg）</span>
+                    </div>
+                    <span class="text-xs font-bold text-brand-peach bg-white px-2.5 py-1 rounded-lg shadow-sm">1 顆</span>
+                  </div>
+
+                  <div class="p-4 rounded-2xl bg-orange-50/80 border border-orange-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-peach"></i>
+                      <span class="text-sm font-medium text-gray-700">維生素 B 群複方</span>
+                    </div>
+                    <span class="text-xs font-bold text-brand-peach bg-white px-2.5 py-1 rounded-lg shadow-sm">1 錠</span>
+                  </div>
+                </div>
+
+                <div class="pt-2 bg-gradient-to-r from-orange-500 to-amber-500 p-4 rounded-2xl text-white text-center">
+                  <!-- 文字動畫 3: 呼吸浮現脈衝效果 -->
+                  <p class="text-sm font-bold pulse-glow-text">💡 溫馨打卡：長輩剛才已按時開盒服藥！</p>
+                  <p class="text-xs text-orange-100 mt-1">雲端已即時通知子女手機 LINE 群組</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 區塊 1: 品牌故事與起源 (Brand Story & Origin) ================= -->
+    <section id="story" class="py-24 bg-white reveal-on-scroll">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-sm font-bold text-brand-peach uppercase tracking-widest bg-orange-50 px-3 py-1 rounded-full border border-orange-100">Origin Story</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold mt-3 text-gray-900">
+            源自一個真實的家庭痛點
+          </h2>
+          <div class="w-16 h-1.5 bg-gradient-to-r from-brand-peach to-brand-amber mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div class="relative">
+            <div class="rounded-3xl bg-gradient-to-br from-orange-100 to-amber-50 p-8 sm:p-10 border border-orange-100 shadow-warm-sm">
+              <div class="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center text-brand-peach mb-6">
+                <i data-lucide="quote" class="w-7 h-7"></i>
+              </div>
+              <blockquote class="text-gray-700 text-lg leading-relaxed italic">
+                「剛才到底吃了沒？」<br>
+                每次外出工作，我們總是接到老家長輩不確定的電話，甚至看著藥袋發愁。有時甚至因為多吃了一次藥，造成身體不適送急診……
+              </blockquote>
+              <div class="mt-6 pt-6 border-t border-orange-200/60 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-brand-peach text-white flex items-center justify-center font-bold text-sm">
+                  CP
+                </div>
+                <div>
+                  <div class="text-sm font-bold text-gray-800">CarePill 創辦初衷</div>
+                  <div class="text-xs text-gray-500">陪伴每一個需要安心守護的家庭</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <h3 class="text-2xl font-bold text-gray-900 leading-snug">
+              家中沒有人能 24 小時守在身旁，<br>
+              但關懷與科技可以隨時在線。
+            </h3>
+            <p class="text-gray-600 leading-relaxed">
+              記憶力減退是每個長者都會面臨的生理歷程，而現代人繁忙的腳步，往往無法在每餐準時端水遞藥。重複吃藥造成的身體危害，以及忘記吃藥引發的慢性病波動，一直是家庭照護者心中最掛念的大石。
+            </p>
+            <p class="text-gray-600 leading-relaxed">
+              我們深感照護者的焦慮與長輩的無助，因而創立了 <strong>CarePill</strong>。我們不只是販售一個藥盒，更希望透過簡單、友善且不侵犯長輩隱私的貼心設計，重塑服藥這件日常小事。
+            </p>
+            <div class="pt-2">
+              <a href="#philosophy" class="inline-flex items-center gap-2 text-brand-peach font-bold hover:text-brand-coral transition-colors">
+                <span>深入了解我們的核心價值觀</span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= 區塊 2: 品牌理念與核心價值 (Philosophy & Core Values) ================= -->
+    <section id="philosophy" class="py-24 bg-brand-cream/60 reveal-on-scroll">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-sm font-bold text-brand-peach uppercase tracking-widest bg-orange-100 px-3 py-1 rounded-full">Core Philosophy</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold mt-3 text-gray-900">
+            三大核心價值：為愛賦能
+          </h2>
+          <p class="text-gray-500 mt-3 text-base">以長輩的尊嚴為核心，給予家庭照護者最堅實的後盾</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          
+          <!-- 價值 1 -->
+          <div class="bg-white rounded-3xl p-8 border border-orange-100 shadow-sm hover:shadow-warm-lg transition-all duration-300 group hover:-translate-y-2">
+            <div class="w-16 h-16 rounded-2xl bg-orange-100 text-brand-peach flex items-center justify-center mb-6 group-hover:bg-brand-peach group-hover:text-white transition-colors">
+              <i data-lucide="shield-check" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">安全精準 (Safe)</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              杜絕過量誤食與重複服藥。透過獨家防呆感應卡榫與視覺光束，該吃哪一格、才開哪一格，提供 100% 放心用藥防護。
+            </p>
+          </div>
+
+          <!-- 價值 2 -->
+          <div class="bg-white rounded-3xl p-8 border border-orange-100 shadow-sm hover:shadow-warm-lg transition-all duration-300 group hover:-translate-y-2">
+            <div class="w-16 h-16 rounded-2xl bg-amber-100 text-brand-amber flex items-center justify-center mb-6 group-hover:bg-brand-amber group-hover:text-white transition-colors">
+              <i data-lucide="smile" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">獨立自主 (Independent)</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              打破「需要被時時看管」的被動心理負擔。大字體顯示、大按鈕感應，長者能自豪且獨立地管理自己的每日健康。
+            </p>
+          </div>
+
+          <!-- 價值 3 -->
+          <div class="bg-white rounded-3xl p-8 border border-orange-100 shadow-sm hover:shadow-warm-lg transition-all duration-300 group hover:-translate-y-2">
+            <div class="w-16 h-16 rounded-2xl bg-teal-100 text-brand-mint flex items-center justify-center mb-6 group-hover:bg-brand-mint group-hover:text-white transition-colors">
+              <i data-lucide="heart" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">安心陪伴 (Caring)</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              科技不冷冰，關心零距離。讓遠在外地打拼的子女在收到用藥打卡後安心微笑，讓家庭充滿愛與互信。
+            </p>
+          </div>
+
+        </div>
+
+        <!-- 核心宣言橫幅 -->
+        <div class="mt-12 p-8 rounded-3xl bg-gradient-to-r from-orange-400 via-brand-peach to-amber-400 text-white shadow-warm-md flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-1 text-center md:text-left">
+            <h4 class="text-2xl font-black">「我們深信，最好的關懷，是讓長輩自立，讓子女安心。」</h4>
+            <p class="text-orange-100 text-sm">CarePill 持續傾聽 10,000+ 家庭用藥回饋，持續推動溫暖科技迭代。</p>
+          </div>
+          <a href="#contact" class="btn-warm-secondary !text-brand-peach !border-white px-8 py-3.5 rounded-full font-bold text-sm whitespace-nowrap shadow-sm">
+            聯絡我們諮詢
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= 區塊 3: 產品展示 (展示 3 個產品與服務內容) ================= -->
+    <section id="products" class="py-24 bg-white reveal-on-scroll">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-sm font-bold text-brand-peach uppercase tracking-widest bg-orange-100 px-3 py-1 rounded-full">Product Showcase</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold mt-3 text-gray-900">
+            展示 3 大核心產品與服務內容
+          </h2>
+          <p class="text-gray-500 mt-3 text-base">符合作業規範：實體硬體、雲端軟體、管家諮詢全面連動</p>
+          <div class="w-16 h-1.5 bg-gradient-to-r from-brand-peach to-brand-amber mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+          
+          <!-- 產品 1：實體物聯網藥盒 -->
+          <div class="bg-gradient-to-b from-orange-50/50 to-white rounded-3xl border border-orange-100 p-8 flex flex-col justify-between hover:shadow-warm-lg transition-all duration-300">
+            <div>
+              <div class="relative mb-6 rounded-2xl bg-white p-6 border border-orange-100 flex items-center justify-center">
+                <span class="absolute top-3 left-3 bg-brand-peach text-white text-[11px] font-bold px-2.5 py-1 rounded-full">產品一：IoT 硬體</span>
+                <i data-lucide="package" class="w-20 h-20 text-brand-peach py-2"></i>
+              </div>
+              <h3 class="text-2xl font-extrabold text-gray-900 mb-2">CarePill 智慧感知藥盒</h3>
+              <p class="text-xs text-brand-peach font-semibold mb-4">專利防呆感應 ｜ 聲光雙效引導 ｜ 7 日多格分裝</p>
+              <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                具備各倉獨立光感導引燈與溫和聲響，服藥時間到自動亮燈解鎖。若在非指定時間開蓋將發出警示提示，徹底杜絕重複吃藥風險。
+              </p>
+              
+              <ul class="space-y-2.5 text-xs text-gray-600 font-medium">
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
+                  <span>高續航力：充飽電可待機達 45 天</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
+                  <span>食品級無毒抑菌材質、防水防潮密封圈</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
+                  <span>磁吸式開合，適合握力較小的高齡長者</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-orange-100">
+              <a href="#contact" class="btn-warm-primary w-full py-3 rounded-xl font-bold text-sm text-center block">預訂實體藥盒</a>
+            </div>
+          </div>
+
+          <!-- 產品 2：CareSync APP -->
+          <div class="bg-gradient-to-b from-amber-50/50 to-white rounded-3xl border-2 border-brand-amber/30 p-8 flex flex-col justify-between hover:shadow-warm-lg transition-all duration-300 relative">
+            <span class="absolute -top-3 right-6 bg-gradient-to-r from-brand-peach to-brand-amber text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">人氣首選推薦</span>
+            <div>
+              <div class="relative mb-6 rounded-2xl bg-white p-6 border border-amber-100 flex items-center justify-center">
+                <span class="absolute top-3 left-3 bg-brand-amber text-white text-[11px] font-bold px-2.5 py-1 rounded-full">產品二：APP 軟體</span>
+                <i data-lucide="smartphone" class="w-20 h-20 text-brand-amber py-2"></i>
+              </div>
+              <h3 class="text-2xl font-extrabold text-gray-900 mb-2">CareSync 雲端健康管家</h3>
+              <p class="text-xs text-brand-amber font-semibold mb-4">藥物辨識掃描 ｜ 彈性排程推播 ｜ 服藥日曆</p>
+              <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                在每次整理藥盒時，拍照即可自動辨識藥品名稱與劑量。專為長者打造大字版高對比介面，並同步推播提醒至智慧手錶或手機。
+              </p>
+              
+              <ul class="space-y-2.5 text-xs text-gray-600 font-medium">
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
+                  <span>AI 藥袋智能辨識，自動帶入服用時間</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
+                  <span>漏服 30 分鐘自動撥打溫馨關懷語音</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
+                  <span>iOS / Android / 智慧穿戴裝置全支援</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-amber-100">
+              <a href="#contact" class="btn-warm-primary w-full py-3 rounded-xl font-bold text-sm text-center block !bg-gradient-to-r !from-brand-amber !to-brand-peach">免費下載體驗 APP</a>
+            </div>
+          </div>
+
+          <!-- 產品 3：家庭關懷與專員諮詢 -->
+          <div class="bg-gradient-to-b from-teal-50/50 to-white rounded-3xl border border-teal-100 p-8 flex flex-col justify-between hover:shadow-warm-lg transition-all duration-300">
+            <div>
+              <div class="relative mb-6 rounded-2xl bg-white p-6 border border-teal-100 flex items-center justify-center">
+                <span class="absolute top-3 left-3 bg-brand-mint text-white text-[11px] font-bold px-2.5 py-1 rounded-full">產品三：雲端諮詢</span>
+                <i data-lucide="user-check" class="w-20 h-20 text-brand-mint py-2"></i>
+              </div>
+              <h3 class="text-2xl font-extrabold text-gray-900 mb-2">家庭安心連動與藥師專線</h3>
+              <p class="text-xs text-brand-mint font-semibold mb-4">多人家庭群組 ｜ 異常主動通報 ｜ 藥師線上諮詢</p>
+              <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                長輩開盒服藥後系統自動向家人回傳打卡記錄。若對藥物相互作用有疑慮，一鍵直連專業藥師專員線上諮詢，守護全家健康。
+              </p>
+              
+              <ul class="space-y-2.5 text-xs text-gray-600 font-medium">
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
+                  <span>支援 LINE 官方帳號用藥打卡即時連動</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
+                  <span>月度用藥合規報表，就醫時可直接給醫師檢視</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
+                  <span>平日專屬健康專員一對一用藥疑難解答</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-teal-100">
+              <a href="#contact" class="btn-warm-secondary w-full py-3 rounded-xl font-bold text-sm text-center block !text-brand-mint !border-teal-200 hover:!bg-teal-50">預約專員方案諮詢</a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= 區塊 4: 品牌特色與視覺體驗 (Features & Experience) ================= -->
+    <section id="features" class="py-24 bg-gradient-to-b from-brand-cream to-orange-50/40 reveal-on-scroll">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-sm font-bold text-brand-peach uppercase tracking-widest bg-orange-100 px-3 py-1 rounded-full">Visual Experience</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold mt-3 text-gray-900">
+            明亮溫暖，極致友善的視覺體驗
+          </h2>
+          <p class="text-gray-500 mt-3 text-base">為年長者特別校準的高對比色彩、柔和圓角與零門檻操作</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          <div class="bg-white p-6 rounded-3xl border border-orange-100 shadow-sm text-center space-y-4">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-orange-100 text-brand-peach flex items-center justify-center">
+              <i data-lucide="sun" class="w-7 h-7"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800">暖陽健康色調</h4>
+            <p class="text-xs text-gray-500 leading-relaxed">
+              摒棄冷冰冰的醫療白，採用溫暖杏橘與柔和蜜桃色，化解長輩對藥品的抗拒心態。
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-3xl border border-orange-100 shadow-sm text-center space-y-4">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-100 text-brand-amber flex items-center justify-center">
+              <i data-lucide="type" class="w-7 h-7"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800">高識別大字級排版</h4>
+            <p class="text-xs text-gray-500 leading-relaxed">
+              全面通過 WCAG 2.1 高對比度無障礙標準，即使不戴老花眼鏡也能一目了然。
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-3xl border border-orange-100 shadow-sm text-center space-y-4">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-teal-100 text-brand-mint flex items-center justify-center">
+              <i data-lucide="volume-2" class="w-7 h-7"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800">溫柔自然音提醒</h4>
+            <p class="text-xs text-gray-500 leading-relaxed">
+              告別尖銳刺耳的鬧鈴，採用悅耳的鳥鳴與和弦音階，吃藥時間成為一天中的舒心時刻。
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-3xl border border-orange-100 shadow-sm text-center space-y-4">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-red-100 text-brand-coral flex items-center justify-center">
+              <i data-lucide="touchpad" class="w-7 h-7"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800">防呆一鍵整理</h4>
+            <p class="text-xs text-gray-500 leading-relaxed">
+              每週藥盒整理導引，分步驟語音確認「藥名、劑量、格數」，養成主動整理習慣。
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= 區塊 5: 聯絡資訊與行動呼籲 (Contact & CTA) ================= -->
+    <section id="contact" class="py-24 bg-white relative overflow-hidden reveal-on-scroll">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8">
+        
+        <div class="bg-gradient-to-br from-orange-500 via-brand-peach to-amber-500 rounded-3xl p-8 sm:p-14 text-white shadow-warm-lg relative overflow-hidden">
+          
+          <!-- 背景裝飾氣泡 -->
+          <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+
+          <div class="grid lg:grid-cols-12 gap-10 items-center relative z-10">
+            
+            <div class="lg:col-span-6 space-y-6">
+              <span class="inline-block text-xs font-extrabold uppercase px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-white">Call to Action</span>
+              <h2 class="text-3xl sm:text-4xl font-extrabold leading-tight">
+                立即為家人預約<br>一份安心不遺忘的禮物
+              </h2>
+              <p class="text-orange-100 text-sm sm:text-base leading-relaxed">
+                填寫下方資訊，即可免費索取《銀髮安全用藥衛教手冊》與 CarePill 首發 7 折預購專屬優惠碼，健康管理專員將於 24 小時內與您聯繫。
+              </p>
+
+              <div class="pt-4 space-y-3 text-sm text-orange-100">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="phone-call" class="w-5 h-5 text-white"></i>
+                  <span>諮詢專線：0800-888-CARE (0800-888-227)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <i data-lucide="mail" class="w-5 h-5 text-white"></i>
+                  <span>客服信箱：support@carepill.health</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <i data-lucide="clock" class="w-5 h-5 text-white"></i>
+                  <span>服務時間：週一至週五 09:00 - 18:00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 聯絡表單 -->
+            <div class="lg:col-span-6 bg-white text-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+              <h3 class="text-xl font-bold text-gray-900 mb-1">索取優惠與專員諮詢</h3>
+              <p class="text-xs text-gray-500 mb-6">請留下您的聯絡方式，我們將盡速為您安排專員體驗說明</p>
+
+              <form id="consult-form" class="space-y-4" onsubmit="event.preventDefault(); handleFormSubmit();">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">您的姓名 / 稱謂</label>
+                  <input type="text" required placeholder="例如：陳先生 / 王小姐" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-peach text-sm bg-gray-50 focus:bg-white transition-all">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">聯絡電話</label>
+                  <input type="tel" required placeholder="例如：0912-345-678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-peach text-sm bg-gray-50 focus:bg-white transition-all">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">諮詢需求類型</label>
+                  <select class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-peach text-sm bg-gray-50 focus:bg-white transition-all">
+                    <option>為家中年邁長輩添購智慧藥盒</option>
+                    <option>本身需長期規律用藥，了解 APP 連線功能</option>
+                    <option>醫療院所 / 長照安養機構合作洽詢</option>
+                    <option>其他健康管理諮詢</option>
+                  </select>
+                </div>
+
+                <button type="submit" id="submit-btn" class="btn-warm-primary w-full py-3.5 rounded-xl text-base font-bold flex items-center justify-center gap-2 mt-2">
+                  <span>送出預約申請</span>
+                  <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+              </form>
+
+              <!-- 提交成功訊息提示 -->
+              <div id="form-success" class="hidden mt-4 p-4 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm font-semibold text-center">
+                🎉 感謝您的預約！CarePill 專員已收到訊息，將盡速與您聯絡。
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= 頁尾 (Footer) ================= -->
+  <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-gray-800">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-peach to-brand-amber flex items-center justify-center text-white">
+            <i data-lucide="pill" class="w-5 h-5 -rotate-45"></i>
+          </div>
+          <span class="text-xl font-bold text-white">CarePill</span>
+          <span class="text-xs text-gray-500 ml-2">讓家人不再擔憂，讓自己不再遺忘</span>
+        </div>
+
+        <div class="flex items-center gap-6 text-sm">
+          <a href="#story" class="hover:text-white transition-colors">品牌起源</a>
+          <a href="#philosophy" class="hover:text-white transition-colors">核心理念</a>
+          <a href="#products" class="hover:text-white transition-colors">產品服務</a>
+          <a href="#contact" class="hover:text-white transition-colors">聯絡我們</a>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
+        <p>© 2026 CarePill 智憶雲盒. 依據《品牌與網站設計作業》全規格實作完成.</p>
+        <p>Designed with Care for Every Family Member.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= JavaScript 互動功能 ================= -->
+  <script>
+    // 初始化 Lucide 圖標
+    lucide.createIcons();
+
+    // 手機版選單切換開關
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+
+      // 點擊手機選單項目自動收合抽屜
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+        });
+      });
+    }
+
+    // 表單提交互動處理
+    function handleFormSubmit() {
+      const btn = document.getElementById('submit-btn');
+      const successMsg = document.getElementById('form-success');
+      if (!btn || !successMsg) return;
+
+      btn.disabled = true;
+      btn.innerHTML = `<span>處理中...</span>`;
+      
+      setTimeout(() => {
+        btn.classList.add('hidden');
+        successMsg.classList.remove('hidden');
+      }, 700);
+    }
+
+    // 捲動進場淡入效果 (IntersectionObserver)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, {
+      threshold: 0.12
+    });
+
+    document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
